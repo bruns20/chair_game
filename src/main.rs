@@ -10,14 +10,20 @@ use bevy_rapier3d::prelude::*;
 
 const SPAWN_POINT: Vec3 = Vec3::new(0.0, 1.625, 6.0);
 
+//scripted test runs for screenshots, only with `--features betty` (see src/betty.rs)
+#[cfg(feature = "betty")]
+mod betty;
+
 fn main() {
-    App::new()
-        .add_plugins(DefaultPlugins)
+    let mut app = App::new();
+    app.add_plugins(DefaultPlugins)
         .add_plugins(RapierPhysicsPlugin::<()>::default())
         .add_plugins(FpsControllerPlugin)
         .add_systems(Startup, setup)
-        .add_systems(Update, (manage_cursor, arrow_key_look, update_debug_hud))
-        .run();
+        .add_systems(Update, (manage_cursor, arrow_key_look, update_debug_hud));
+    #[cfg(feature = "betty")]
+    app.add_plugins(betty::BettyPlugin);
+    app.run();
 }
 
 fn setup(

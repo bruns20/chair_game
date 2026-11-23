@@ -1,0 +1,13 @@
+# Look at the scene, walk forward, turn right, look again.
+# cargo run --features betty -- betty/walk.txt
+size 1280 720
+at 20 shot start
+at 20 dump
+at 30 press MouseLeft       # grabs the cursor, which mouse look needs
+at 31 release MouseLeft
+at 40 press KeyW
+at 70 release KeyW          # half a second of walking: 3 m, stopping short of the cube
+at 110 mouse 300 0          # turn right
+at 130 shot after_walk
+at 130 dump
+at 140 quit

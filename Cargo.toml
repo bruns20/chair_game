@@ -8,6 +8,10 @@ bevy = "0.20.1"
 bevy_fps_controller = { version = "20", features = ["rapier"] }
 bevy_rapier3d = "0.37"
 
+[features]
+# scripted test runs that save screenshots (src/betty.rs); off in normal builds
+betty = []
+
 [profile.dev]
 opt-level = 1
 
