@@ -85,7 +85,7 @@ fn setup(
             FpsController {
                 //radians per mouse count — lower = slower look
                 //NOTE: 100x reduction because testing over RDP inflates mouse counts
-                sensitivity: 0.00000125,
+                sensitivity: 0.001,
                 ..default()
             },
         ))
