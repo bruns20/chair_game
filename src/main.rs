@@ -16,41 +16,23 @@ fn main() {
         .add_plugins(RapierPhysicsPlugin::<()>::default())
         .add_plugins(FpsControllerPlugin)
         .add_systems(Startup, setup)
-        .add_systems(Update, (manage_cursor, arrow_key_look, update_debug_hud))
+        .add_systems(Update, (manage_cursor, update_debug_hud))
         .run();
 }
 
 fn setup(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    //floor, a box with its top surface at y = 0, plus a physics collider
-    commands.spawn((
-        Mesh3d(meshes.add(Cuboid::new(40.0, 0.2, 40.0))),
-        MeshMaterial3d(materials.add(Color::srgb(0.3, 0.5, 0.3))),
-        RigidBody::Fixed,
-        Collider::cuboid(20.0, 0.1, 20.0),
-        Transform::from_xyz(0.0, -0.1, 0.0),
-    ));
 
-    //cube — now something you can walk into
+    //blender map :)
     commands.spawn((
-        Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
-        MeshMaterial3d(materials.add(Color::srgb_u8(124, 144, 255))),
-        RigidBody::Fixed,
-        Collider::cuboid(0.5, 0.5, 0.5),
-        Transform::from_xyz(0.0, 0.5, 0.0),
-    ));
-
-    //sun
-    commands.spawn((
-        DirectionalLight {
-            illuminance: 10_000.0,
-            shadow_maps_enabled: true,
-            ..default()
-        },
-        Transform::from_xyz(4.0, 8.0, 4.0).looking_at(Vec3::ZERO, Vec3::Y),
+        WorldAssetRoot(asset_server.load(
+            GltfAssetLabel::Scene(0).from_asset("maps/first.glb"),
+        )),
+        AsyncSceneCollider::default(),
     ));
 
     //player: two entities.
@@ -138,30 +120,6 @@ fn update_debug_hud(
         dx,
         dy
     );
-}
-
-//temporary debug aid for RDP testing: RDP discards mouse direction, so
-//arrow keys drive the look directly. REMOVE BEFORE PUSHING.
-fn arrow_key_look(
-    keys: Res<ButtonInput<KeyCode>>,
-    time: Res<Time>,
-    mut input: Single<&mut FpsControllerInput>,
-) {
-    const SPEED: f32 = 1.5; //radians per second
-    let dt = time.delta_secs();
-    if keys.pressed(KeyCode::ArrowUp) {
-        input.pitch += SPEED * dt;
-    }
-    if keys.pressed(KeyCode::ArrowDown) {
-        input.pitch -= SPEED * dt;
-    }
-    if keys.pressed(KeyCode::ArrowLeft) {
-        input.yaw += SPEED * dt;
-    }
-    if keys.pressed(KeyCode::ArrowRight) {
-        input.yaw -= SPEED * dt;
-    }
-    input.pitch = input.pitch.clamp(-FRAC_PI_2 + 0.001, FRAC_PI_2 - 0.001);
 }
 
 //click to capture the mouse (and enable the controller), esc to release
