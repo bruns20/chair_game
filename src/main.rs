@@ -1,6 +1,7 @@
 mod camera;
 mod debug_hud;
 mod player;
+mod weapon;
 mod world;
 
 use bevy::prelude::*;
@@ -13,7 +14,13 @@ fn main() {
         .add_plugins(RapierPhysicsPlugin::<()>::default())
         .add_plugins(FpsControllerPlugin)
         .add_systems(Startup, setup)
-        .add_systems(Update, (camera::manage_cursor, debug_hud::update_debug_hud))
+        .add_systems(
+            Update,
+            //fire_tracer first: it reads the lock state of this frame, so the click
+            //that locks the cursor is consumed and only fires once already locked
+            (weapon::fire_tracer, camera::manage_cursor, debug_hud::update_debug_hud),
+        )
+        .add_systems(Update, weapon::expire_tracers)
         .run();
 }
 
