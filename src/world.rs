@@ -13,13 +13,13 @@ pub fn spawn_world(commands: &mut Commands, asset_server: Res<AssetServer>) {
     ));
 
     //the map carries no lights of its own: a sun so it is visible
-    commands.spawn((
-        DirectionalLight::default(),
-        Transform::from_rotation(Quat::from_euler(
-            EulerRot::YXZ,
-            -FRAC_PI_4,
-            -FRAC_PI_2 + 0.5,
-            0.0,
-        )),
-    ));
+    // commands.spawn((
+    //     DirectionalLight::default(),
+    //     Transform::from_rotation(Quat::from_euler(
+    //         EulerRot::YXZ,
+    //         -FRAC_PI_4,
+    //         -FRAC_PI_2 + 0.5,
+    //         0.0,
+    //     )),
+    // ));
 }
