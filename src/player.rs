@@ -50,6 +50,12 @@ pub fn spawn_player(commands: &mut Commands) {
 
     commands.spawn((
         Camera3d::default(),
+        //ambient fill so the shadowed side of the map isn't black
+        AmbientLight {
+            color: Color::srgb(0.5, 0.55, 0.65),
+            brightness: 15.0,
+            affects_lightmapped_meshes: true,
+        },
         RenderPlayer { logical_entity },
     ));
 }
