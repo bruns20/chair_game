@@ -5,7 +5,7 @@ use bevy_fps_controller::controller::*;
 use bevy_rapier3d::prelude::*;
 
 /// Moves the gun model from where it sits in its file into the camera's view.
-const GUN_VIEW_OFFSET: Vec3 = Vec3::new(-0.21, 0.07, 0.0);
+const GUN_VIEW_OFFSET: Vec3 = Vec3::new(-0.21, 0.09, 0.0);
 const SPAWN_POINT: Vec3 = Vec3::new(0.0, 1.625, 6.0);
 
 //player: two entities.
