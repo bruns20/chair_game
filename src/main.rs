@@ -4,6 +4,7 @@ mod player;
 mod weapon;
 mod world;
 mod crosshair;
+mod pausemenu;
 
 use bevy::prelude::*;
 use bevy_fps_controller::controller::*;
@@ -23,6 +24,8 @@ fn main() {
         )
         .add_systems(Update, weapon::expire_tracers)
         .add_plugins(crosshair::CrosshairPlugin)
+        //character still moves and can shoot while paused, not a big deal rn but the whole click to lock cursor thing will have to go when we want to fix it
+        .add_plugins(pausemenu::PauseMenuPlugin)
         .run();
 }
 
