@@ -3,6 +3,7 @@ mod debug_hud;
 mod player;
 mod weapon;
 mod world;
+mod crosshair;
 
 use bevy::prelude::*;
 use bevy_fps_controller::controller::*;
@@ -21,6 +22,7 @@ fn main() {
             (weapon::fire_tracer, camera::manage_cursor, debug_hud::update_debug_hud),
         )
         .add_systems(Update, weapon::expire_tracers)
+        .add_plugins(crosshair::CrosshairPlugin)
         .run();
 }
 
