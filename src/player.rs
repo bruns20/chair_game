@@ -7,6 +7,7 @@ use bevy_rapier3d::prelude::*;
 /// Moves the gun model from where it sits in its file into the camera's view.
 const GUN_VIEW_OFFSET: Vec3 = Vec3::new(-0.21, 0.07, 0.0);
 const SPAWN_POINT: Vec3 = Vec3::new(0.0, 1.625, 6.0);
+const VERTICAL_FOV_DEGREES: f32 = 59.0; // roughly 90° horizontal on 16:9
 
 //player: two entities.
 //the "logical" player is the invisible physics body the controller drives,
@@ -59,6 +60,10 @@ pub fn spawn_player(commands: &mut Commands, asset_server: &AssetServer) {
 
     commands.spawn((
         Camera3d::default(),
+        Projection::Perspective(PerspectiveProjection {
+            fov: VERTICAL_FOV_DEGREES.to_radians(),
+            ..default()
+        }),
         //ambient fill so the shadowed side of the map isn't black
         AmbientLight {
             color: Color::srgb(0.5, 0.55, 0.65),
