@@ -5,6 +5,10 @@ use bevy::{
 use bevy_fps_controller::controller::{LogicalPlayer, RenderPlayer};
 use bevy_rapier3d::prelude::*;
 
+/// How far to the right of the view the shot comes out, in world units.
+const GUN_OFFSET: f32 = 0.5;
+/// How far down the aim ray the shot converges on the cursor, in world units.
+const CONVERGENCE: f32 = 10.0;
 /// How far a shot travels before giving up, in world units.
 const MAX_TOI: f32 = 100.0;
 /// How long a tracer stays visible, in seconds.
@@ -37,23 +41,28 @@ pub fn fire_tracer(
     }
 
     //the cursor is locked, so the aim is the middle of the screen
-    let Ok(ray) = camera.0.viewport_to_world(camera.1, window.size() / 2.0) else {
+    let Ok(aim) = camera.0.viewport_to_world(camera.1, window.size() / 2.0) else {
         return;
     };
-    let dir: Vec3 = ray.direction.into();
+    //the shot comes out of the gun on the right side of the screen and
+    //converges on whatever the cursor points at
+    let right = camera.1.rotation() * Vec3::X;
+    let origin = Vec3::from(aim.origin) + right * GUN_OFFSET;
+    let aim_point: Vec3 = (aim.origin + aim.direction * CONVERGENCE).into();
+    let dir = (aim_point - origin).normalize();
 
     //exclude the player's own collider, or every shot hits the body at range zero
     let filter = QueryFilter::new().exclude_rigid_body(*player);
     let Ok(context) = rapier_context.single() else {
         return;
     };
-    let toi = context
-        .cast_ray(ray.origin, dir, MAX_TOI, true, filter)
+        let toi = context
+        .cast_ray(origin, dir, MAX_TOI, true, filter)   
         .map(|(_, toi)| toi)
-        .unwrap_or(MAX_TOI); //a miss flies to the end of the range
+        .unwrap_or(MAX_TOI);
 
-    let start = ray.origin + dir * TRACER_START;
-    let end = ray.origin + dir * toi;
+    let start = origin + dir * TRACER_START;            
+    let end = origin + dir * toi;                      
     let length = (end - start).length();
     if length < f32::EPSILON {
         return;

@@ -53,7 +53,7 @@ pub fn spawn_player(commands: &mut Commands) {
         //ambient fill so the shadowed side of the map isn't black
         AmbientLight {
             color: Color::srgb(0.5, 0.55, 0.65),
-            brightness: 15.0,
+            brightness: 30.0,
             affects_lightmapped_meshes: true,
         },
         RenderPlayer { logical_entity },
