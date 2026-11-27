@@ -30,7 +30,7 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+    player::spawn_player(&mut commands, &asset_server);
     world::spawn_world(&mut commands, asset_server);
-    player::spawn_player(&mut commands);
     debug_hud::spawn_debug_hud(&mut commands);
 }

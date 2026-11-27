@@ -4,12 +4,14 @@ use bevy::prelude::*;
 use bevy_fps_controller::controller::*;
 use bevy_rapier3d::prelude::*;
 
+/// Moves the gun model from where it sits in its file into the camera's view.
+const GUN_VIEW_OFFSET: Vec3 = Vec3::new(-0.21, 0.07, 0.0);
 const SPAWN_POINT: Vec3 = Vec3::new(0.0, 1.625, 6.0);
 
 //player: two entities.
 //the "logical" player is the invisible physics body the controller drives,
 //the "render" player is the camera that follows it.
-pub fn spawn_player(commands: &mut Commands) {
+pub fn spawn_player(commands: &mut Commands, asset_server: &AssetServer) {
     let logical_entity = commands
         .spawn((
             Collider::cylinder(1.5, 0.5),
@@ -64,5 +66,13 @@ pub fn spawn_player(commands: &mut Commands) {
             affects_lightmapped_meshes: true,
         },
         RenderPlayer { logical_entity },
+        //the gun sits at (0.27, -0.12, -0.16) in its file, which is outside
+        //bevy's default 45 degree fov, so shift it into the lower right of the view
+        children![(
+            WorldAssetRoot(asset_server.load(
+                GltfAssetLabel::Scene(0).from_asset("models/weapon1.glb"),
+            )),
+            Transform::from_translation(GUN_VIEW_OFFSET),
+        )],
     ));
 }
