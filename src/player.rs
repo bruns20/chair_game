@@ -40,6 +40,13 @@ pub fn spawn_player(commands: &mut Commands) {
                 //radians per mouse count — lower = slower look
                 //NOTE: 100x reduction because testing over RDP inflates mouse counts
                 sensitivity: 0.001,
+                air_acceleration: 100.0,
+                gravity: 23.0,
+                walk_speed: 14.0,
+                run_speed: 20.0,
+                crouched_speed: 9.0,
+                crouch_speed: 20.0,
+                uncrouch_speed: 20.0,
                 ..default()
             },
         ))
